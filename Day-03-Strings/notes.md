@@ -1,124 +1,209 @@
-# Day 3 — Java Strings
+# Day 3 — Java Strings Notes
 
-## 1. What Is a String?
+## 1. Introduction to Strings
 
-A `String` is a sequence of characters. In Java, `String` is a class in `java.lang`.
+A **String** is a sequence of characters. In Java, `String` is a class belonging to the `java.lang` package.
 
 ```java
 String name = "Snehal";
 String language = new String("Java");
 ```
 
-Strings use **zero-based indexing**:
-- First character: index `0`
-- Second character: index `1`
-- Last character: index `length() - 1`
+### Key points
+- A String stores text, including letters, digits, spaces, and symbols.
+- Strings are objects, not primitive data types.
+- String indexing starts from `0`.
+- The last valid index is `length() - 1`.
+- Strings are immutable.
 
 ```java
-String word = "Java";
-System.out.println(word.length()); // 4
-System.out.println(word.charAt(0)); // J
-System.out.println(word.charAt(3)); // a
-```
+String text = "Java";
 
-Calling `charAt()` with an index below `0` or at least `length()` throws `StringIndexOutOfBoundsException`.
+System.out.println(text.length()); // 4
+System.out.println(text.charAt(0)); // J
+System.out.println(text.charAt(3)); // a
+```
 
 ## 2. String Immutability
 
-Strings are **immutable**: after a `String` object is created, its character sequence cannot be changed. Methods such as `toUpperCase()` and `replace()` return a result; they do not modify the original object.
+**Immutability** means an object's contents cannot be changed after it is created.
+
+Java Strings are immutable. Methods that produce modified text return a new String rather than changing the original String.
 
 ```java
 String text = "java";
 text.toUpperCase();
 
 System.out.println(text); // java
+```
 
+The original value remains unchanged because the returned String was not assigned.
+
+```java
+String text = "java";
 text = text.toUpperCase();
+
 System.out.println(text); // JAVA
 ```
 
-The second assignment makes `text` refer to the returned string. It does not mutate the original object.
+Here, the variable `text` refers to the new String.
 
-## 3. Comparing Strings
+### Advantages of immutability
+- Makes String values predictable.
+- Allows safe reuse of String literals.
+- Supports the String pool mechanism.
+- Helps prevent unintended modifications.
 
-### `equals()`
+## 3. String Pool
 
-Checks whether two strings contain the same sequence of characters.
+The **String pool** is a special area of Java memory where String literals can be reused.
 
 ```java
-String a = new String("java");
-String b = new String("java");
+String a = "Java";
+String b = "Java";
 
-System.out.println(a.equals(b)); // true
+System.out.println(a == b); // true
 ```
 
-### `==`
-
-For reference types, `==` checks whether both references point to the same object, not whether the text is equal.
+Both variables refer to the same pooled literal in this example.
 
 ```java
-String a = new String("java");
-String b = new String("java");
+String a = new String("Java");
+String b = new String("Java");
 
 System.out.println(a == b);      // false
 System.out.println(a.equals(b)); // true
 ```
 
-### String pool
+The `new` keyword creates distinct String objects in this example.
 
-Java can reuse string literals from the string pool.
+### Remember
+- String literals can share pooled objects.
+- `==` compares object references.
+- `equals()` compares String contents.
+- Use `equals()` when comparing text.
+
+## 4. Comparing Strings
+
+### `equals()`
+
+Checks whether two Strings contain the same characters.
 
 ```java
-String a = "java";
-String b = "java";
-
-System.out.println(a == b); // usually true for these identical literals
+System.out.println("Java".equals("Java")); // true
 ```
 
-For text comparison, use `equals()` rather than relying on `==`.
+### `equalsIgnoreCase()`
 
-### Other comparison methods
+Compares Strings without distinguishing uppercase and lowercase letters.
 
 ```java
-"JAVA".equalsIgnoreCase("java"); // true
-"apple".compareTo("banana");    // negative value
+System.out.println("JAVA".equalsIgnoreCase("java")); // true
 ```
 
-`compareTo()` compares lexicographically and returns a negative value, zero, or a positive value depending on the comparison. Do not assume it returns exactly `-1` or `1`.
+### `==`
 
-## 4. Common String Methods
+Checks whether two object references point to the same object.
 
-| Method | Purpose | Example |
-|---|---|---|
-| `length()` | Number of UTF-16 code units | `"Java".length()` → `4` |
-| `charAt(i)` | Character at index `i` | `"Java".charAt(1)` → `'a'` |
-| `substring(begin)` | Text from `begin` to end | `"Java".substring(2)` → `"va"` |
-| `substring(begin, end)` | Text from `begin` inclusive to `end` exclusive | `"Java".substring(1, 3)` → `"av"` |
-| `contains(s)` | Whether the text contains a sequence | `"java".contains("av")` → `true` |
-| `indexOf(x)` | First matching index, or `-1` | `"banana".indexOf('a')` → `1` |
-| `lastIndexOf(x)` | Last matching index, or `-1` | `"banana".lastIndexOf('a')` → `5` |
-| `startsWith(s)` | Whether text begins with a prefix | `"Java".startsWith("Ja")` → `true` |
-| `endsWith(s)` | Whether text ends with a suffix | `"Java".endsWith("va")` → `true` |
-| `replace(old, new)` | Replaces matching characters/sequences | `"banana".replace('a', 'o')` → `"bonono"` |
-| `toUpperCase()` | Returns uppercase text | `"java".toUpperCase()` → `"JAVA"` |
-| `toLowerCase()` | Returns lowercase text | `"JAVA".toLowerCase()` → `"java"` |
-| `trim()` | Removes leading/trailing characters at or below U+0020 | `" hi ".trim()` → `"hi"` |
-| `isEmpty()` | Whether length is zero | `"".isEmpty()` → `true` |
-| `isBlank()` | Whether empty or whitespace-only (Java 11+) | `"  ".isBlank()` → `true` |
-| `split(regex)` | Splits using a regular expression | `"a,b".split(",")` |
-| `toCharArray()` | Copies characters to a `char[]` | `"cat".toCharArray()` |
+```java
+String a = new String("Java");
+String b = new String("Java");
 
-`substring(begin, end)` uses an exclusive end index. For example, `"coding".substring(1, 4)` returns `"odi"`.
+System.out.println(a == b); // false
+```
 
-`split()` accepts a regular expression, not just a literal separator. To split on a dot, escape it for the regular expression and Java string literal:
+### `compareTo()`
+
+Compares Strings lexicographically, based on their character values.
+
+```java
+System.out.println("apple".compareTo("banana")); // negative
+System.out.println("java".compareTo("java"));    // 0
+System.out.println("zebra".compareTo("apple"));   // positive
+```
+
+- Negative result: the first String comes before the second.
+- Zero: the Strings compare as equal.
+- Positive result: the first String comes after the second.
+
+The result is not necessarily exactly `-1`, `0`, or `1`.
+
+## 5. Important String Methods
+
+| Method | Purpose |
+|---|---|
+| `length()` | Returns the String length |
+| `charAt(index)` | Returns the character at an index |
+| `substring(begin)` | Returns text from an index to the end |
+| `substring(begin, end)` | Returns a range; ending index is excluded |
+| `equals(text)` | Compares String contents |
+| `equalsIgnoreCase(text)` | Compares without case sensitivity |
+| `contains(text)` | Checks whether a sequence is present |
+| `indexOf(value)` | Returns the first matching index |
+| `lastIndexOf(value)` | Returns the last matching index |
+| `startsWith(prefix)` | Checks the beginning of a String |
+| `endsWith(suffix)` | Checks the ending of a String |
+| `replace(old, new)` | Replaces matching characters or sequences |
+| `toUpperCase()` | Converts text to uppercase |
+| `toLowerCase()` | Converts text to lowercase |
+| `trim()` | Removes certain leading and trailing characters |
+| `isEmpty()` | Checks whether the length is zero |
+| `isBlank()` | Checks whether empty or whitespace-only; Java 11+ |
+| `split(regex)` | Splits text using a regular expression |
+| `toCharArray()` | Converts a String to a character array |
+
+### Examples
+
+```java
+String text = "Programming";
+
+System.out.println(text.length());          // 11
+System.out.println(text.charAt(0));         // P
+System.out.println(text.substring(0, 4));   // Prog
+System.out.println(text.contains("gram"));  // true
+System.out.println(text.indexOf('g'));      // 3
+System.out.println(text.endsWith("ing"));   // true
+```
+
+The ending index of `substring(begin, end)` is exclusive.
+
+```java
+String text = "banana";
+
+System.out.println(text.replace('a', 'o')); // bonono
+System.out.println(text);                  // banana
+```
+
+`replace()` returns a new String; it does not modify the original.
+
+### `split()`
+
+The `split()` method uses a regular expression.
+
+```java
+String colors = "red,green,blue";
+String[] parts = colors.split(",");
+```
+
+A dot (`.`) is a special regular-expression character. To split on a literal dot:
 
 ```java
 String[] parts = "file.txt".split("\\.");
 ```
 
-## 5. Traversing a String
+### `indexOf()` and `lastIndexOf()`
 
-### Forward traversal
+Both return `-1` when the requested character or sequence is not found.
+
+```java
+System.out.println("Java".indexOf('z')); // -1
+```
+
+## 6. String Traversal
+
+**Traversal** means visiting characters one by one.
+
+A String can be traversed from beginning to end using a loop.
 
 ```java
 String text = "Java";
@@ -128,26 +213,60 @@ for (int i = 0; i < text.length(); i++) {
 }
 ```
 
-The loop starts at index `0` and stops before `text.length()`.
-
-### Backward traversal
+Backward traversal starts from the last valid index.
 
 ```java
-String text = "Java";
-
 for (int i = text.length() - 1; i >= 0; i--) {
     System.out.println(text.charAt(i));
 }
 ```
 
-Start at the last valid index, `length() - 1`, and decrease `i` until it reaches `0`.
+### Important indexing rule
 
-## 6. StringBuilder
+Correct:
 
-Repeated concatenation in a loop can create many intermediate `String` objects because strings are immutable. `StringBuilder` provides a mutable character sequence and is useful when constructing text repeatedly.
+```java
+i < text.length()
+```
+
+Incorrect:
+
+```java
+i <= text.length()
+```
+
+The incorrect condition can cause an index-out-of-bounds exception because `text.length()` is not a valid character index.
+
+## 7. String and Character Arrays
+
+A String can be converted to a character array using `toCharArray()`.
+
+```java
+String text = "Java";
+char[] characters = text.toCharArray();
+```
+
+A character array can be converted back to a String.
+
+```java
+char[] characters = {'J', 'a', 'v', 'a'};
+String text = new String(characters);
+```
+
+### Difference between String and `char[]`
+
+- A String is immutable.
+- A character array is mutable.
+- Individual elements of a character array can be modified.
+- Character arrays are useful when an algorithm requires direct character modification.
+
+## 8. StringBuilder
+
+`StringBuilder` is a mutable sequence of characters. It is useful when text needs to be built or modified repeatedly.
 
 ```java
 StringBuilder result = new StringBuilder();
+
 result.append("Java");
 result.append(" ");
 result.append("DSA");
@@ -155,47 +274,38 @@ result.append("DSA");
 System.out.println(result.toString()); // Java DSA
 ```
 
-Useful methods:
-- `append(value)` — adds to the end.
-- `insert(index, value)` — inserts at an index.
-- `delete(start, end)` — deletes a range; `end` is exclusive.
-- `reverse()` — reverses the sequence.
-- `length()` — returns the current length.
-- `charAt(index)` — reads a character.
-- `setCharAt(index, ch)` — replaces a character.
-- `toString()` — creates a `String` representation.
+### Important StringBuilder methods
 
-Example: reverse a string.
+| Method | Purpose |
+|---|---|
+| `append(value)` | Adds content to the end |
+| `insert(index, value)` | Inserts content at an index |
+| `delete(start, end)` | Deletes a range; ending index is excluded |
+| `reverse()` | Reverses the sequence |
+| `length()` | Returns the current length |
+| `charAt(index)` | Reads a character |
+| `setCharAt(index, ch)` | Replaces a character |
+| `toString()` | Converts the builder to a String |
 
-```java
-String text = "hello";
-String reversed = new StringBuilder(text).reverse().toString();
-System.out.println(reversed); // olleh
-```
+### String vs StringBuilder
 
-## 7. Conversions
+| String | StringBuilder |
+|---|---|
+| Immutable | Mutable |
+| Suitable for storing text | Useful for repeated text modification |
+| Changed text requires a returned String | Methods such as `append()` modify the builder |
+| Repeated concatenation can create intermediate objects | Often more efficient for repeated concatenation |
 
-### String to character array
-
-```java
-String text = "hello";
-char[] letters = text.toCharArray();
-```
-
-### Character array to String
-
-```java
-char[] letters = {'J', 'a', 'v', 'a'};
-String text = new String(letters);
-```
+## 9. String and Number Conversions
 
 ### String to integer
 
 ```java
-int number = Integer.parseInt("123");
+String text = "123";
+int number = Integer.parseInt(text);
 ```
 
-The input must be a valid integer representation; otherwise `NumberFormatException` is thrown.
+If the String does not represent a valid integer, `NumberFormatException` is thrown.
 
 ### Integer to String
 
@@ -204,135 +314,114 @@ int number = 123;
 String text = String.valueOf(number);
 ```
 
-### Digit character to numeric value
+### Digit character to integer
 
 ```java
 char ch = '7';
-int digit = ch - '0'; // 7
+int digit = ch - '0';
 ```
 
-Use `ch - '0'` only when `ch` is a decimal digit character from `'0'` to `'9'`.
+This works for decimal digit characters from `'0'` to `'9'`.
 
-## 8. Core String DSA Patterns
-
-### A. Reverse a String
-
-Use two pointers or `StringBuilder`.
+### Integer digit to character
 
 ```java
-String text = "hello";
-char[] chars = text.toCharArray();
-
-int left = 0;
-int right = chars.length - 1;
-
-while (left < right) {
-    char temp = chars[left];
-    chars[left] = chars[right];
-    chars[right] = temp;
-
-    left++;
-    right--;
-}
-
-String reversed = new String(chars);
+int digit = 7;
+char ch = (char) (digit + '0');
 ```
 
-Two-pointer idea: swap the outer characters, then move inward.
+This example assumes the integer is between `0` and `9`.
 
-### B. Check a Palindrome
+## 10. General String DSA Concepts
 
-A palindrome reads the same forward and backward.
+### Two-pointer technique
+
+The two-pointer technique uses two indexes to process a sequence.
 
 ```java
-String text = "level";
 int left = 0;
 int right = text.length() - 1;
-boolean palindrome = true;
-
-while (left < right) {
-    if (text.charAt(left) != text.charAt(right)) {
-        palindrome = false;
-        break;
-    }
-
-    left++;
-    right--;
-}
-
-System.out.println(palindrome);
 ```
 
-This version is case-sensitive and considers spaces and punctuation. Normalize the string first if the problem asks to ignore case or non-alphanumeric characters.
+The pointers can move toward each other or through the sequence according to the algorithm's conditions.
 
-### C. Count Vowels
+This technique can reduce unnecessary repeated processing.
+
+### Character mapping
+
+Characters can be mapped to array indexes using character arithmetic.
+
+For lowercase English letters:
 
 ```java
-String text = "education";
-int vowels = 0;
-
-for (int i = 0; i < text.length(); i++) {
-    char ch = Character.toLowerCase(text.charAt(i));
-
-    if (ch == 'a' || ch == 'e' || ch == 'i' ||
-        ch == 'o' || ch == 'u') {
-        vowels++;
-    }
-}
+int index = ch - 'a';
 ```
 
-This checks the five English vowel letters and is not a complete vowel classifier for every language.
+The mapping is:
 
-### D. Count Character Frequency
+- `'a'` → index `0`
+- `'b'` → index `1`
+- `'c'` → index `2`
+- `'z'` → index `25`
 
-For lowercase English letters only:
+This mapping applies to lowercase English letters only.
 
-```java
-String text = "banana";
-int[] frequency = new int[26];
+### Character normalization
 
-for (int i = 0; i < text.length(); i++) {
-    char ch = text.charAt(i);
+Text may need to be normalized before comparison. Common examples include converting letters to lowercase or deciding how spaces and punctuation should be treated.
 
-    if (ch >= 'a' && ch <= 'z') {
-        frequency[ch - 'a']++;
-    }
-}
-```
+Always follow the requirements of the algorithm. Do not remove spaces or ignore case unless the task specifies it.
 
-`ch - 'a'` maps `'a'` to index `0`, `'b'` to index `1`, and `'z'` to index `25`. This method needs a different strategy if the input can contain uppercase letters, punctuation, or arbitrary Unicode characters.
+## 11. Time and Space Complexity of String Operations
 
-## 9. Complexity and Problem-Solving Notes
+Let `n` be the number of characters in the input String.
 
-Let `n` be the string length.
+| Operation | Time complexity | Additional space |
+|---|---|---|
+| `length()` | `O(1)` | `O(1)` |
+| `charAt(index)` | `O(1)` | `O(1)` |
+| Traverse all characters | `O(n)` | `O(1)` |
+| Compare two Strings | `O(n)` worst case | `O(1)` |
+| Create a character array from a String | `O(n)` | `O(n)` |
+| Build a String using a StringBuilder | Depends on appended content; typically `O(n)` total for `n` characters | `O(n)` |
+| Use a fixed 26-element array | `O(1)` initialization | `O(1)` |
+| Search for a character or substring | Depends on the search; may be `O(n)` or more for substring search | Usually `O(1)` auxiliary space |
 
-- Reading `length()` is constant time.
-- Reading a character with `charAt(i)` is constant time.
-- Traversing all characters is linear time, `O(n)`.
-- Reversing by swapping a character array takes `O(n)` time and `O(n)` extra space for the array.
-- Checking a palindrome with two pointers takes `O(n)` time in the worst case and `O(1)` auxiliary space when checking the original string directly.
-- Building a result with `StringBuilder.append()` is typically efficient; repeated appends take amortized linear time in the total output size.
-- Comparing strings can take up to `O(n)` time when many leading characters match.
-- Creating transformed strings such as uppercase/lowercase or a substring result may require work proportional to the output length; avoid assuming every string method is `O(1)`.
+### Complexity principles
 
-## 10. Common Mistakes
+- Processing each character once generally takes `O(n)` time.
+- A fixed-size array uses `O(1)` space relative to input length.
+- A character array storing all input characters uses `O(n)` space.
+- Creating a new String proportional to the input length generally requires `O(n)` space.
+- A comparison may stop at the first mismatch, but the worst case can examine all characters.
 
-1. Using `==` instead of `equals()` to compare text.
-2. Forgetting that indexes begin at `0`.
-3. Using `i <= text.length()` and then accessing an invalid index.
-4. Assuming the end index of `substring(begin, end)` is included.
-5. Expecting a String method to mutate the original string.
-6. Using `split(".")` to split on a literal dot. A dot is a regex wildcard; use `split("\\.")`.
-7. Repeatedly concatenating strings inside a large loop instead of considering `StringBuilder`.
-8. Assuming a 26-element frequency array handles every possible character.
-9. Forgetting that a simple palindrome check is case-sensitive and includes spaces/punctuation.
-10. Using `charAt()` without ensuring the index is valid.
+## 12. Common Mistakes
 
-## 11. Practice Checklist
+1. Using `==` instead of `equals()` to compare String contents.
+2. Forgetting that String indexes start at `0`.
+3. Accessing `charAt(text.length())`.
+4. Forgetting that `substring(begin, end)` excludes the ending index.
+5. Expecting String methods to modify the original String.
+6. Using `split(".")` to split on a literal dot instead of `split("\\.")`.
+7. Using repeated String concatenation in a large loop when `StringBuilder` is more suitable.
+8. Assuming a 26-element array supports every possible character.
+9. Ignoring case, spaces, or punctuation without checking the requirements.
+10. Forgetting to consider empty Strings.
+11. Assuming `compareTo()` returns only `-1`, `0`, or `1`.
+12. Using `Integer.parseInt()` without considering invalid input.
 
-- [ ] Reverse a string.
-- [ ] Check whether a string is a palindrome.
-- [ ] Count vowels and consonants.
-- [ ] Count the frequency of each lowercase English letter.
-- [ ] Explain the difference between `==` and `equals()`.
-- [ ] Explain why `StringBuilder` is useful for repeated modifications.
+## 13. Day 3 Revision Checklist
+
+- [ ] Understand String creation and indexing.
+- [ ] Explain String immutability.
+- [ ] Understand the String pool.
+- [ ] Distinguish `==`, `equals()`, and `equalsIgnoreCase()`.
+- [ ] Understand `compareTo()`.
+- [ ] Know the important String methods.
+- [ ] Understand forward and backward traversal.
+- [ ] Convert between String and `char[]`.
+- [ ] Understand StringBuilder and its methods.
+- [ ] Convert between Strings and numbers.
+- [ ] Understand the two-pointer technique and character mapping.
+- [ ] Explain time and space complexity.
+- [ ] Avoid common String-related errors.
